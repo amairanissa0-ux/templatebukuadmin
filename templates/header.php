@@ -17,7 +17,7 @@
 
     <!-- Font Awesome -->
     <link
-        href="../assets/vendor/fontawesome-free/css/all.min.css"
+        href="assets/vendor/fontawesome-free/css/all.min.css"
         rel="stylesheet"
         type="text/css">
 
@@ -30,13 +30,13 @@
 
     <!-- SB Admin 2 -->
     <link
-        href="../assets/css/sb-admin-2.min.css"
+        href="assets/css/sb-admin-2.min.css"
         rel="stylesheet">
 
 
     <!-- DataTables -->
     <link
-        href="../assets/vendor/datatables/dataTables.bootstrap4.min.css"
+        href="assets/vendor/datatables/dataTables.bootstrap4.min.css"
         rel="stylesheet">
 
 

@@ -1,6 +1,8 @@
 <?php
 require_once('function.php');
 include_once('templates/header.php');
+
+$base = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
 ?>
 
 <!-- Begin Page Content -->
@@ -131,9 +133,7 @@ include_once('templates/header.php');
                                 </td>
 
                                 <td>
-                                    <button type="button" class="btn btn-success btn-sm">
-                                        Ubah
-                                    </button>
+                                    <a class="btn btn-success" href="<?= $base ?>/edit-tamu.php?id=<?= urlencode($tamu['id_tamu']) ?>">Ubah</a>
 
                                     <button type="button" class="btn btn-danger btn-sm">
                                         Hapus
@@ -280,7 +280,7 @@ include_once('templates/header.php');
 
 <!-- Page level custom scripts -->
 <script src="js/demo/datatables-demo.js"></script>
-
+1fv            
 
 <?php
 include_once('templates/footer.php');
