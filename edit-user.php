@@ -114,7 +114,7 @@ include_once('templates/header.php');
 
                         <!-- Kembali -->
                         <a
-                            href="users.php"
+                            href="user.php"
                             class="btn btn-danger btn-icon-split">
 
                             <span class="icon text-white-50">

@@ -8,6 +8,7 @@ include_once('templates/header.php');
 
     <!-- Page Heading -->
     <h1 class="h3 mb-4 text-gray-800">Data User</h1>
+
     <?php
     // jika ada tombol simpan
     if (isset($_POST['simpan'])) {
@@ -22,10 +23,26 @@ include_once('templates/header.php');
             <div class="alert alert-danger" role="alert">
                 Data gagal disimpan!
             </div>
+        <?php
+        }
+    } else if (isset($_POST['ganti_password'])) {
+
+        if (ganti_password($_POST) > 0) {
+        ?>
+            <div class="alert alert-success" role="alert">
+                Password berhasil diubah!
+            </div>
+        <?php
+        } else {
+        ?>
+            <div class="alert alert-danger" role="alert">
+                Password gagal diubah!
+            </div>
     <?php
         }
     }
     ?>
+
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
@@ -36,6 +53,7 @@ include_once('templates/header.php');
                 <span class="text">Data User</span>
             </button>
         </div>
+
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -55,18 +73,34 @@ include_once('templates/header.php');
 
                         // Query untuk memanggil semua data dari tabel users
                         $users = query("SELECT * FROM users");
+
                         foreach ($users as $user) : ?>
                             <tr>
                                 <td><?= $no++; ?></td>
                                 <td><?= $user['username'] ?></td>
                                 <td><?= $user['user_role'] ?></td>
                                 <td>
+
+                                    <a href="#"
+                                        class="btn btn-info btn-icon-split"
+                                        data-toggle="modal"
+                                        data-target="#gantiPassword"
+                                        onclick="gantiPassword('<?= $user['id_user'] ?>')">
+
+                                        <span class="text">Ganti Password</span>
+                                    </a>
+
                                     <a class="btn btn-success"
-                                        href="edit-user.php?id=<?= $user['id_user'] ?>">Ubah</a>
+                                        href="edit-user.php?id=<?= $user['id_user']; ?>">
+                                        Ubah
+                                    </a>
 
                                     <a onclick="return confirm('Apakah anda yakin ingin menghapus data ini?')"
                                         class="btn btn-danger"
-                                        href="hapus-user.php?id=<?= $user['id_user'] ?>">Hapus</a>
+                                        href="hapus-user.php?id=<?= $user['id_user']; ?>">
+                                        Hapus
+                                    </a>
+
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -78,6 +112,7 @@ include_once('templates/header.php');
 
 </div>
 <!-- /.container-fluid -->
+
 
 <?php
 // mengambil kode terbesar dari tabel untuk generate id_user baru
@@ -94,22 +129,29 @@ $huruf = "usr";
 $kodeuser = $huruf . sprintf("%02s", $urutan);
 ?>
 
+
 <!-- Modal Tambah -->
 <div class="modal fade" id="tambahModal" tabindex="-1" aria-labelledby="tambahModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
+
             <div class="modal-header">
                 <h5 class="modal-title" id="tambahModalLabel">Tambah Data user</h5>
+
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+
             <div class="modal-body">
+
                 <form method="post" action="">
+
                     <input type="hidden" name="id_user" id="id_user" value="<?= $kodeuser ?>">
 
                     <div class="form-group row">
                         <label for="username" class="col-sm-3 col-form-label">Username</label>
+
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="username" name="username">
                         </div>
@@ -117,6 +159,7 @@ $kodeuser = $huruf . sprintf("%02s", $urutan);
 
                     <div class="form-group row">
                         <label for="password" class="col-sm-3 col-form-label">Password</label>
+
                         <div class="col-sm-8">
                             <input type="password" class="form-control" id="password" name="password">
                         </div>
@@ -124,6 +167,7 @@ $kodeuser = $huruf . sprintf("%02s", $urutan);
 
                     <div class="form-group row">
                         <label for="user_role" class="col-sm-3 col-form-label">User Role</label>
+
                         <div class="col-sm-8">
                             <select class="form-control" id="user_role" name="user_role">
                                 <option value="admin">Administrator</option>
@@ -135,6 +179,7 @@ $kodeuser = $huruf . sprintf("%02s", $urutan);
                     <!-- Tombol -->
                     <div class="form-group row">
                         <div class="col-sm-8 offset-sm-3">
+
                             <button type="submit" name="simpan" class="btn btn-primary">
                                 Simpan
                             </button>
@@ -142,13 +187,104 @@ $kodeuser = $huruf . sprintf("%02s", $urutan);
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">
                                 Keluar
                             </button>
+
                         </div>
                     </div>
+
                 </form>
+
             </div>
         </div>
     </div>
 </div>
+
+
+
+<!-- Modal Ganti Password -->
+<div class="modal fade" id="gantiPassword" tabindex="-1"
+    aria-labelledby="gantiPasswordLabel" aria-hidden="true">
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="gantiPasswordLabel">
+                    Ganti Password
+                </h5>
+
+                <button type="button" class="close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                <form method="post" action="">
+
+                    <input type="hidden"
+                        name="id_user"
+                        id="id_user_password"
+                        value="">
+
+                    <div class="form-group row">
+
+                        <label for="passwordBaru" class="col-sm-4 col-form-label">
+                            Password Baru
+                        </label>
+
+                        <div class="col-sm-7">
+
+                            <input type="password"
+                                class="form-control"
+                                id="passwordBaru"
+                                name="password"
+                                required>
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-11">
+
+                            <button type="submit"
+                                name="ganti_password"
+                                class="btn btn-primary">
+
+                                Ganti Password
+
+                            </button>
+
+                            <button type="button"
+                                class="btn btn-secondary"
+                                data-dismiss="modal">
+
+                                Keluar
+
+                            </button>
+
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    function gantiPassword(id) {
+        document.getElementById('id_user_password').value = id;
+    }
+</script>
+
 
 <?php
 include_once('templates/footer.php');
