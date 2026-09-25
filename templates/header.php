@@ -1,6 +1,8 @@
 <?php
 // memulai session
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 ?>
 
 <!DOCTYPE html>
@@ -103,21 +105,28 @@ session_start();
 
 
             <!-- Buku Tamu -->
-            <li class="nav-item">
+            <?php
+            // Buku Tamu hanya bisa dilihat oleh operator
+            if (isset($_SESSION['role']) && $_SESSION['role'] == 'operator') :
+            ?>
 
-                <a
-                    class="nav-link"
-                    href="buku-tamu.php">
+                <li class="nav-item">
 
-                    <i class="fas fa-fw fa-book-open"></i>
+                    <a
+                        class="nav-link"
+                        href="buku-tamu.php">
 
-                    <span>
-                        Buku Tamu
-                    </span>
+                        <i class="fas fa-fw fa-book-open"></i>
 
-                </a>
+                        <span>
+                            Buku Tamu
+                        </span>
 
-            </li>
+                    </a>
+
+                </li>
+
+            <?php endif; ?>
 
 
             <!-- Laporan -->
@@ -139,21 +148,28 @@ session_start();
 
 
             <!-- User -->
-            <li class="nav-item">
+            <?php
+            // User hanya bisa dilihat oleh admin
+            if (isset($_SESSION['role']) && $_SESSION['role'] == 'admin') :
+            ?>
 
-                <a
-                    class="nav-link"
-                    href="user.php">
+                <li class="nav-item">
 
-                    <i class="fas fa-fw fa-users"></i>
+                    <a
+                        class="nav-link"
+                        href="user.php">
 
-                    <span>
-                        User
-                    </span>
+                        <i class="fas fa-fw fa-users"></i>
 
-                </a>
+                        <span>
+                            User
+                        </span>
 
-            </li>
+                    </a>
+
+                </li>
+
+            <?php endif; ?>
 
 
             <!-- Divider -->
@@ -299,7 +315,13 @@ session_start();
                                 <span
                                     class="mr-2 d-none d-lg-inline text-gray-600 small">
 
-                                    Admin
+                                    <?php
+                                    if (isset($_SESSION['username'])) {
+                                        echo $_SESSION['username'];
+                                    } else {
+                                        echo 'User';
+                                    }
+                                    ?>
 
                                 </span>
 
@@ -350,9 +372,7 @@ session_start();
 
                                 <a
                                     class="dropdown-item"
-                                    href="#"
-                                    data-toggle="modal"
-                                    data-target="#logoutModal">
+                                    href="logout.php">
 
                                     <i
                                         class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400">
