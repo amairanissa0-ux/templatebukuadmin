@@ -1,0 +1,15 @@
+{
+    "name": "user/buku-tamu",
+    "autoload": {
+        "psr-4": {
+            "User\\BukuTamu\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "amairanissa0-ux",
+            "email": "amairanissa0@gmail.com"
+        }
+    ],
+    "require": {}
+}
