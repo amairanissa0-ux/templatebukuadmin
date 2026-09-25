@@ -1,27 +1,46 @@
 <?php
-// tambahkan sintaks php untuk mengecek apakah ada tombol login yang ditekan
+// memulai session
+session_start();
+
+// cek bila ada user yang sudah login maka langsung ke halaman dashboard
+if (isset($_SESSION['login'])) {
+    header('Location: index.php');
+    exit;
+}
+
 require 'koneksi.php';
 
+// cek apakah ada tombol login yang ditekan
 if (isset($_POST['login'])) {
+
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    $result = mysqli_query($koneksi, "SELECT * FROM users WHERE username = '$username'");
+    $result = mysqli_query(
+        $koneksi,
+        "SELECT * FROM users WHERE username = '$username'"
+    );
 
-    // cek apakah ada username
+    // cek apakah username ditemukan
     if (mysqli_num_rows($result) == 1) {
 
-        // cek apakah passwordnya benar
+        // ambil data user
         $row = mysqli_fetch_assoc($result);
 
+        // cek apakah password benar
         if (password_verify($password, $row['password'])) {
 
+            // set session
+            $_SESSION['login'] = true;
+            $_SESSION['username'] = $username;
+
             // login berhasil
-            header("Location: index.php");
+            header('Location: index.php');
             exit;
         }
     }
 
+    // username atau password salah
     $error = true;
 }
 ?>
@@ -33,7 +52,9 @@ if (isset($_POST['login'])) {
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <meta name="description" content="">
     <meta name="author" content="">
@@ -41,14 +62,17 @@ if (isset($_POST['login'])) {
     <title>SB Admin 2 - Login</title>
 
     <!-- Custom fonts for this template-->
-    <link href="assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="assets/vendor/fontawesome-free/css/all.min.css"
+        rel="stylesheet"
+        type="text/css">
 
     <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,700,800,900"
         rel="stylesheet">
 
     <!-- Custom styles for this template-->
-    <link href="assets/css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="assets/css/sb-admin-2.min.css"
+        rel="stylesheet">
 
 </head>
 
@@ -56,100 +80,128 @@ if (isset($_POST['login'])) {
 
     <div class="container">
 
-        <body class="bg-gradient-primary">
+        <!-- Notifikasi -->
+        <?php
+        if (isset($error)) :
+        ?>
 
-            <div class="container">
+            <div class="alert alert-danger mt-3" role="alert">
+                Username atau password salah!
+            </div>
 
-                <?php
-                if (isset($error)) : ?>
-
-                    <div class="alert alert-danger mt-3" role="alert">
-                        Username atau password salah!
-                    </div>
-
-                <?php endif; ?>
+        <?php endif; ?>
 
 
-                <!-- Outer Row -->
-                <div class="row justify-content-center">
+        <!-- Outer Row -->
+        <div class="row justify-content-center">
 
-                    <!-- Ukuran Card Login -->
-                    <div class="col-xl-10 col-lg-12 col-md-9">
+            <!-- Ukuran Card Login -->
+            <div class="col-xl-10 col-lg-12 col-md-9">
 
-                        <div class="card o-hidden border-0 shadow-lg my-5">
+                <div class="card o-hidden border-0 shadow-lg my-5">
 
-                            <div class="card-body p-0">
+                    <div class="card-body p-0">
 
-                                <!-- Nested Row within Card Body -->
-                                <div class="row">
+                        <!-- Nested Row within Card Body -->
+                        <div class="row">
 
-                                    <!-- Gambar -->
-                                    <div class="col-lg-6 d-none d-lg-block bg-login-image">
-                                        <img src="assets/images/logo-page.png" alt="">
+                            <!-- Gambar -->
+                            <div class="col-lg-6 d-none d-lg-block bg-login-image">
+
+                                <img src="assets/images/logo-page.png"
+                                    alt="">
+
+                            </div>
+
+
+                            <!-- Form Login -->
+                            <div class="col-lg-6">
+
+                                <div class="p-5">
+
+                                    <div class="text-center">
+
+                                        <h1 class="h4 text-gray-900 mb-4">
+                                            Welcome Back!
+                                        </h1>
+
                                     </div>
 
-                                    <!-- Form Login -->
-                                    <div class="col-lg-6">
 
-                                        <div class="p-5">
+                                    <form method="post"
+                                        action=""
+                                        class="user">
 
-                                            <div class="text-center">
-                                                <h1 class="h4 text-gray-900 mb-4">
-                                                    Welcome Back!
-                                                </h1>
-                                            </div>
+                                        <!-- Username -->
+                                        <div class="form-group">
 
-                                            <form method="post" action="" class="user">
+                                            <input type="text"
+                                                class="form-control form-control-user"
+                                                id="username"
+                                                name="username"
+                                                placeholder="Username..."
+                                                required>
 
-                                                <div class="form-group">
-                                                    <input type="text"
-                                                        class="form-control form-control-user"
-                                                        id="username"
-                                                        name="username"
-                                                        placeholder="Username...">
-                                                </div>
+                                        </div>
 
-                                                <div class="form-group">
-                                                    <input type="password"
-                                                        class="form-control form-control-user"
-                                                        id="password"
-                                                        name="password"
-                                                        placeholder="Password...">
-                                                </div>
 
-                                                <div class="form-group">
-                                                    <div class="custom-control custom-checkbox small">
+                                        <!-- Password -->
+                                        <div class="form-group">
 
-                                                        <input type="checkbox"
-                                                            class="custom-control-input"
-                                                            id="remember"
-                                                            name="remember">
+                                            <input type="password"
+                                                class="form-control form-control-user"
+                                                id="password"
+                                                name="password"
+                                                placeholder="Password..."
+                                                required>
 
-                                                        <label class="custom-control-label"
-                                                            for="remember">
-                                                            Remember Me
-                                                        </label>
+                                        </div>
 
-                                                    </div>
-                                                </div>
 
-                                                <button type="submit"
-                                                    name="login"
-                                                    class="btn btn-primary btn-user btn-block">
-                                                    Login
-                                                </button>
+                                        <!-- Remember Me -->
+                                        <div class="form-group">
 
-                                            </form>
+                                            <div class="custom-control custom-checkbox small">
 
-                                            <hr>
+                                                <input type="checkbox"
+                                                    class="custom-control-input"
+                                                    id="remember"
+                                                    name="remember">
 
-                                            <div class="text-center">
-                                                <a class="small" href="forgot-password.html">
-                                                    Forgot Password?
-                                                </a>
+                                                <label class="custom-control-label"
+                                                    for="remember">
+                                                    Remember Me
+                                                </label>
+
                                             </div>
 
                                         </div>
+
+
+                                        <!-- Tombol Login -->
+                                        <button type="submit"
+                                            name="login"
+                                            class="btn btn-primary btn-user btn-block">
+
+                                            Login
+
+                                        </button>
+
+                                    </form>
+
+
+                                    <hr>
+
+
+                                    <!-- Forgot Password -->
+                                    <div class="text-center">
+
+                                        <a class="small"
+                                            href="forgot-password.html">
+
+                                            Forgot Password?
+
+                                        </a>
 
                                     </div>
 
@@ -165,16 +217,24 @@ if (isset($_POST['login'])) {
 
             </div>
 
-            <!-- Bootstrap core JavaScript-->
-            <script src="assets/vendor/jquery/jquery.min.js"></script>
-            <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        </div>
 
-            <!-- Core plugin JavaScript-->
-            <script src="assets/vendor/jquery-easing/jquery.easing.min.js"></script>
+    </div>
 
-            <!-- Custom scripts for all pages-->
-            <script src="assets/js/sb-admin-2.min.js"></script>
 
-        </body>
+    <!-- Bootstrap core JavaScript-->
+    <script src="assets/vendor/jquery/jquery.min.js"></script>
+
+    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+
+    <!-- Core plugin JavaScript-->
+    <script src="assets/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+
+    <!-- Custom scripts for all pages-->
+    <script src="assets/js/sb-admin-2.min.js"></script>
+
+</body>
 
 </html>

@@ -1,3 +1,8 @@
+<?php
+// memulai session
+session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -155,6 +160,35 @@
             <hr class="sidebar-divider d-none d-md-block">
 
 
+            <!-- Logout -->
+            <?php
+            // cek apabila ada user login maka tampilkan logout
+            if (isset($_SESSION['login'])) :
+            ?>
+
+                <li class="nav-item">
+
+                    <a
+                        class="nav-link"
+                        href="logout.php">
+
+                        <i class="fas fa-fw fa-power-off"></i>
+
+                        <span>
+                            Logout
+                        </span>
+
+                    </a>
+
+                </li>
+
+            <?php endif; ?>
+
+
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+
+
             <!-- ================================================== -->
             <!-- TOMBOL PERKECIL SIDEBAR -->
             <!-- ================================================== -->
@@ -173,7 +207,6 @@
 
 
         <!-- End Sidebar -->
-
 
 
         <!-- ====================================================== -->
@@ -205,7 +238,6 @@
                         <i class="fa fa-bars"></i>
 
                     </button>
-
 
 
                     <!-- Search -->
@@ -240,7 +272,6 @@
 
 
                     </form>
-
 
 
                     <!-- Topbar Right -->
@@ -280,7 +311,6 @@
 
 
                             </a>
-
 
 
                             <!-- User Dropdown -->
